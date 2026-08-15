@@ -22,3 +22,13 @@ by adding the lines
 
 ```
 Where `$SMS_NO` specifies where to send the status reports as a 10 digit phone number like `13218675309`
+
+# Status messages
+Status messages are sent to `$SMS_NO` and contain in order:
+* A date and time stamp (based on network time)
+* Uptime in seconds
+* Load average
+* Number of records and errors in the bit-error-rate/network-signal-quality log
+* Bit error rate (min-average-max)
+* Network Signal Quality (min-average-max)
+* The most recent SMS's (truncated to keep message at 160 characters)
