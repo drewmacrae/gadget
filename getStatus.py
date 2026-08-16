@@ -44,7 +44,7 @@ def get_summary():
     summary+=getRSSISummary()
     with open("/home/pygu/sms.txt","r") as smses:
        for line in smses.readlines()[::-1]:
-           result = re.search(r'\+(\d{10}).*?,\s*\'(.*)\',',line)
+           result = re.search(r'\+(\d{11}).*?,\s*\'(.*)\',',line)
            if result:
                number = result.group(1)
                message = result.group(2)
