@@ -31,10 +31,10 @@ def sendSMS(number,message, timeout:float=1.0):
     with lock:
         result,response = ATCommand("CMGF","1").execute()
         print(response+[result])
-        assert result == 'OK'
+        assert 'OK' in result
         result,response = ATCommand("CMGS",f'"{number}"').execute()
         print(response+[result])
-        assert result == '>'
+        assert '>' in result
         port.write(bytearray(f"{message}{chr(26)}","ascii"))
         response = b''
         end_time = time.time() + timeout
@@ -48,7 +48,7 @@ def sendSMS(number,message, timeout:float=1.0):
         result = response[-1]
         response = response[:-1]
         print(response+[result])
-        assert result == 'OK'     
+        assert 'OK' in result     
         return result, response
 
 NOECHO = ATCommand("")
