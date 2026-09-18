@@ -29,21 +29,27 @@ class ATCommand:
 
 def sendSMS(number,message, timeout:float=1.0):
     with lock:
-        result,response = ATCommand("CMGF","1").execute()
-        print(response+[result])
-        assert 'OK' in result
-        result,response = ATCommand("CMGS",f'"{number}"').execute()
-        print(response+[result])
-        assert '>' in result
-        port.write(bytearray(f"{message}{chr(26)}","ascii"))
-        response = b''
-        end_time = time.time() + timeout
+        try:
+            result,response = ATCommand("CMGF","1").execute()
+            print(response+[result])
+            assert 'OK' in result
+            result,response = ATCommand("CMGS",f'"{number}"').execute()
+            print(response+[result])
+            assert '>' in result
+            port.write(bytearray(f"{message}{chr(26)}","ascii"))
+            response = b''
+            end_time = time.time() + timeout
+        except Exception as e:
+            # Cleanup after exceptions by sending escape key
+            port.write(bytearray(f"{chr(27)}","ascii"))
+            raise e
+
         while b'OK' not in response and b'ERROR' not in response and b'>' not in response:
             if time.time() > end_time:
                 print(response)
                 raise TimeoutError()
             response += port.read(port.in_waiting)
-            
+        
         response = response.decode().split("\r\n")
         result = response[-1]
         response = response[:-1]
